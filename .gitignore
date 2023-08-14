@@ -1,0 +1,29 @@
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyCharm
+.idea/
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+vscode/
+.vscode
+
+# Environments
+.env*
+!*.example
+.venv
+env/
+venv/
+venv
+ENV/
+env.bak/
+venv.bak/
