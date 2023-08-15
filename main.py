@@ -22,8 +22,8 @@ async def root():
 
 
 @app.get("/posts/", response_model=list[schemas.Post])
-def get_posts(db: Session = Depends(get_db)):
-    select_query = select(models.Post)
+def get_posts(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    select_query = select(models.Post).offset(skip).limit(limit)
     posts = db.scalars(select_query).all()
     return posts
 
@@ -52,4 +52,3 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
     db.add(db_post)
     db.commit()
     return db_post
-

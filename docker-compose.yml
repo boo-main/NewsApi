@@ -21,7 +21,7 @@ services:
   app_db:
     image: postgres
     env_file:
-      - .env
+      - .env.local
     volumes:
       - app_pg_data:/var/lib/postgresql/data
     ports:

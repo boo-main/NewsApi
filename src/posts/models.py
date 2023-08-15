@@ -1,6 +1,6 @@
 from typing import List, Dict, Optional
 from src.database import Base
-from sqlalchemy import ForeignKey, BigInteger
+from sqlalchemy import ForeignKey, BigInteger, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from datetime import datetime
@@ -12,7 +12,7 @@ class Post(Base):
     content: Mapped[str]
     creation_date: Mapped[datetime] = mapped_column(insert_default=func.now())
 
-    telegram_id: Mapped[int | None]
+    telegram_id = Column(BigInteger, nullable=False)
     category_id: Mapped[int | None] = mapped_column(ForeignKey("posts_categories.id"))
     category: Mapped["Category"] = relationship(back_populates="posts")
     channel_id: Mapped[int | None] = mapped_column(ForeignKey("channels.id"))
