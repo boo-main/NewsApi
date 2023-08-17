@@ -1,6 +1,7 @@
 import click
 import asyncio
 import pandas
+import datetime
 import contextlib
 from contextlib import contextmanager
 from src.database import engine, session
@@ -50,28 +51,42 @@ def load_from_xlsx(filename):
     # max_rows = 5
     with session_scope() as session:
         for num, post_data in enumerate(posts, 1):
-            # del post_data['telegram_id']
-            # del post_data['channel_id']
-            # del post_data['category_id']
-            # print(f"{post_data=}")
-            channel = session.scalar(select(models.Channel).where(models.Channel.id == post_data["channel_id"]))
-            if channel is None:
-                new_channel = models.Channel(id=post_data["channel_id"])
-                session.add(new_channel)
-                session.commit()
-            # print(f"!!!{type(post_data['category_id'])}")
-            # print(f"!!!{pandas.isna(post_data['category_id'])}")
-            if not pandas.isna(post_data['category_id']):
+            try:
+                int(post_data['id'])
+            except ValueError:
+                print("skip post, incorrect format")
+                print(post_data)
+                continue
+            try:
+                int(post_data["channel_id"])
+            except ValueError:
+                del post_data['channel_id']
+            else:
+                channel = session.scalar(select(models.Channel).where(models.Channel.id == post_data["channel_id"]))
+                if channel is None:
+                    new_channel = models.Channel(id=post_data["channel_id"])
+                    session.add(new_channel)
+                    session.commit()
+
+            try:
+                int(post_data["category_id"])
+            except ValueError:
+                del post_data['category_id']
+            else:
                 category = session.scalar(select(models.Channel).where(models.Category.id == post_data["category_id"]))
                 if category is None:
                     new_categoey = models.Category(id=post_data["category_id"])
                     session.add(new_categoey)
                     session.commit()
-            else:
-                del post_data['category_id']
+            try:
+                datetime.datetime.fromisoformat(str(post_data['creation_date']))
+            except ValueError:
+                print("skip post, incorrect date format")
+                print(post_data)
+                continue
             post = models.Post(**post_data)
             session.add(post)
-        session.commit()
+            session.commit()
 
 
 if __name__ == '__main__':
