@@ -15,14 +15,17 @@ RUN pip install -U pip && \
     pip install --no-cache-dir -r /tmp/requirements.txt
 
 COPY . /src
-#ENV PATH "$PATH:/src/scripts"
+ENV PATH "$PATH:/src/scripts"
 
-RUN #useradd -m -d /src -s /bin/bash app \
-#    && chown -R app:app /src/* && chmod +x /src/scripts/*
+RUN useradd -m -d /src -s /bin/bash app \
+   && chown -R app:app /src/* && chmod +x /src/scripts/*
 
 WORKDIR /src
-#USER app
+USER app
 
 #CMD ["./scripts/start-dev.sh"]
 #CMD ["uvicorn main:app --reload"]
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+ # useradd: warning: the home directory /src already exists.
+ # useradd: Not copying any file from skel directory into it.
