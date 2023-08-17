@@ -9,18 +9,20 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=utf-8
 
-COPY requirements/ /tmp/requirements.txt
+COPY requirements.txt/ /tmp/requirements.txt
 
 RUN pip install -U pip && \
     pip install --no-cache-dir -r /tmp/requirements.txt
 
 COPY . /src
-ENV PATH "$PATH:/src/scripts"
+#ENV PATH "$PATH:/src/scripts"
 
-RUN useradd -m -d /src -s /bin/bash app \
-    && chown -R app:app /src/* && chmod +x /src/scripts/*
+RUN #useradd -m -d /src -s /bin/bash app \
+#    && chown -R app:app /src/* && chmod +x /src/scripts/*
 
 WORKDIR /src
-USER app
+#USER app
 
-CMD ["./scripts/start-dev.sh"]
+#CMD ["./scripts/start-dev.sh"]
+#CMD ["uvicorn main:app --reload"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
